@@ -22,14 +22,54 @@ struct node{
 	struct node *right;
 };
 
+void mInorder(struct node *root, int *arr,int *added);
+void mPreorder(struct node *root, int *arr, int *added);
+void mPostorder(struct node *root, int *arr, int *added);
 
 void inorder(struct node *root, int *arr){
-	
+
+	if (root == NULL || arr == NULL) return;
+	int added = 0;
+	mInorder(root, arr, &added);
+}
+void mInorder(struct node *root, int *arr, int *added){
+
+
+	if (root){
+		mInorder(root->left, arr,added);
+		arr[*added] = root->data;
+		*added = *added + 1;
+		mInorder(root->right, arr,added);
+	}
+
 }
 void preorder(struct node *root, int *arr){
 	
+	if (root == NULL || arr == NULL) return;
+	int added = 0;
+	mPreorder(root, arr, &added);
+}
+void mPreorder(struct node *root, int *arr, int *added){
+
+	if (root){
+		arr[*added] = root->data;
+		*added = *added + 1;
+		mPreorder(root->left, arr, added);
+		mPreorder(root->right, arr, added);
+	}
 }
 void postorder(struct node *root, int *arr){
 	
+	if (root == NULL || arr == NULL) return;
+	int added = 0;
+	mPostorder(root, arr, &added);
 }
+void mPostorder(struct node *root, int *arr, int *added){
 
+	if (root){
+		mPreorder(root->left, arr, added);
+		mPreorder(root->right, arr, added);
+		arr[*added] = root->data;
+		*added = *added + 1;
+	}
+}
