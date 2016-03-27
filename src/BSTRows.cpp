@@ -22,16 +22,62 @@ Note : Return -1 for Invalid Cases .
 
 #include <stdlib.h>
 #include <stdio.h>
-
+#define MAX 30
 struct node{
 	struct node * left;
 	int data;
 	struct node *right;
 };
-
-
-
+void Enqueue(struct node **q, int *front, int *rear, struct node *ele);
+struct node* Dequeue(struct node **q, int *front, int *rear);
+int IsEmpty(struct node **q, int *front, int *rear);
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	if (root == NULL)
+		return NULL;
+
+	struct node *queue[MAX];
+	for (int i = 0; i < MAX; i++)
+		//queue[i] = (struct node*)malloc(sizeof(struct node));
+		queue[i] = (struct node*)calloc(1, sizeof(struct node));
+	int front = -1;
+	int rear = -1;
+	int *result = (int*)calloc(MAX, sizeof(int));
+	int index = 0;
+
+	if (root)
+		Enqueue(queue, &front,&rear,root);
+	while (!IsEmpty(queue, &front, &rear))
+	{
+		struct node* temp = Dequeue(queue,&front,&rear);
+		result[index++] = temp->data;
+		if (temp->right)
+			Enqueue(queue, &front, &rear, temp->right);
+		if (temp->left)
+			Enqueue(queue, &front, &rear, temp->left);
+	}
+	return result;
+}
+void Enqueue(struct node **q, int *front, int *rear, struct node *ele){
+
+	if (*rear == MAX - 1) return;
+	else{
+		if (*front == -1)
+			*front = 0;
+		*rear = *rear + 1;
+		q[*rear] = ele;
+	}
+
+}
+struct node* Dequeue(struct node **q, int *front, int *rear){
+
+	struct node* temp = q[*front];
+	*front = *front + 1;
+	return temp;
+}
+int IsEmpty(struct node **q, int *front, int *rear){
+
+	if (*front == -1 || *front > *rear)
+		return 1;
+	return 0;
 }
